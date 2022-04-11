@@ -73,37 +73,20 @@ public class DatabaseBackend {
     private Connection serverConnection;
 
     public DatabaseBackend() {
-        String url = System.getProperty("esa.nmf.archive.persistence.jdbc.url");
+        String urlP = System.getProperty("esa.nmf.archive.persistence.jdbc.url");
 
-        if (null != url && !"".equals(url)) {
-            this.url = url;
+        if (null != urlP && !"".equals(urlP)) {
+            this.url = urlP;
         } else {
             this.url = "jdbc:" + DATABASE_NAME + ":" + DATABASE_LOCATION_NAME;
         }
 
         String driver = System.getProperty("esa.nmf.archive.persistence.jdbc.driver");
-
-        if (null != driver && !"".equals(driver)) {
-            this.jdbcDriver = driver;
-        } else {
-            this.jdbcDriver = DRIVER_CLASS_NAME;
-        }
-
-        String user = System.getProperty("esa.nmf.archive.persistence.jdbc.user");
-
-        if (null != user && !"".equals(user)) {
-            this.user = user;
-        } else {
-            this.user = null;
-        }
-
-        String password = System.getProperty("esa.nmf.archive.persistence.jdbc.password");
-
-        if (null != password && !"".equals(password)) {
-            this.password = password;
-        } else {
-            this.password = null;
-        }
+        this.jdbcDriver = (null != driver && !"".equals(driver)) ? driver : DRIVER_CLASS_NAME;
+        String userP = System.getProperty("esa.nmf.archive.persistence.jdbc.user");
+        this.user = (null != userP && !"".equals(userP)) ? userP : null;
+        String pass = System.getProperty("esa.nmf.archive.persistence.jdbc.password");
+        this.password = (null != pass && !"".equals(pass)) ? pass : null;
     }
 
     public Semaphore getEmAvailability() {
@@ -167,7 +150,6 @@ public class DatabaseBackend {
                 serverConnection = DriverManager.getConnection(url2, user, password);
             }
         } catch (SQLException ex) {
-
             if (jdbcDriver.equals(DRIVER_CLASS_NAME)) {
                 Logger.getLogger(ArchiveManager.class.getName())
                         .log(Level.WARNING, "Unexpected exception ! ", ex);
