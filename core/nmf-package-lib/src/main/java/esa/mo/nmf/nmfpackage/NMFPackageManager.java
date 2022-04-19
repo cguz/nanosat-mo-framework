@@ -532,7 +532,12 @@ public class NMFPackageManager {
         return folder;
     }
 
-    private static String generateFilePathForSystem(final String path) {
+    private static String generateFilePathForSystem(final String path) throws IOException {
+        // Sanitize the path to prevent a ZipSlip attack:
+        if (path.contains("..")) {
+            throw new IOException("Warning! A ZipSlip attack was detected!");
+        }
+
         String out = path.replace('/', File.separatorChar);
         return out.replace('\\', File.separatorChar);
     }
